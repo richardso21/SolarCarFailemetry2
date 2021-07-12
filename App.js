@@ -1,6 +1,7 @@
 import { Camera } from "expo-camera";
 import firebase from "firebase";
 import React, { useEffect, useRef, useState } from "react";
+import * as ScreenOrientation from "expo-screen-orientation";
 import {
     StyleSheet,
     Text,
@@ -12,6 +13,9 @@ import {
     LogBox,
     ToastAndroid,
 } from "react-native";
+
+// allow to orient both ways in landscape mode
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 // config and init firebase
 const firebaseConfig = {
@@ -49,6 +53,7 @@ export default function App() {
     const takePicture = async () => {
         if (cameraRef && cameraReady && isRecording) {
             const data = await cameraRef.current.takePictureAsync();
+            ToastAndroid.show("Picture Taken!", ToastAndroid.SHORT);
             uploadPicture(data.uri);
         }
     };
@@ -64,6 +69,7 @@ export default function App() {
             };
             xhr.onerror = (e) => {
                 console.error(e);
+                ToastAndroid.show("Failed!", ToastAndroid.SHORT);
                 reject(new TypeError("Network Request Failed"));
             };
             xhr.responseType = "blob";
@@ -86,6 +92,7 @@ export default function App() {
             setCameraPerm(CameraPermStatus.granted);
         })();
     }, []);
+
     // take pictures within intervals
     useEffect(() => {
         const interval = setInterval(() => {

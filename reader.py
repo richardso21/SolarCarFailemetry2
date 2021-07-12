@@ -14,7 +14,7 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 
 point = Point("mem") \
     .tag("host", "host1") \
-    .field("used_percent", 23.43234543) \
+    .field("used_percent", 40.0) \
     .time(datetime.utcnow(), WritePrecision.NS)
 
 write_api.write(bucket, org, point)
