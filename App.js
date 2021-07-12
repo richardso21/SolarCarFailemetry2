@@ -32,7 +32,7 @@ export default function App() {
     // states
     const [cameraPerm, setCameraPerm] = useState(null);
     const [cameraReady, setCameraState] = useState(false);
-    const [isRecording, setRecordingStatus] = useState(true);
+    const [isRecording, setRecordingStatus] = useState(false);
     // camera reference
     const cameraRef = useRef(null);
 
@@ -47,7 +47,7 @@ export default function App() {
 
     // function to take picture
     const takePicture = async () => {
-        if (cameraRef && cameraReady) {
+        if (cameraRef && cameraReady && isRecording) {
             const data = await cameraRef.current.takePictureAsync();
             uploadPicture(data.uri);
         }
@@ -89,9 +89,7 @@ export default function App() {
     // take pictures within intervals
     useEffect(() => {
         const interval = setInterval(() => {
-            console.log(new Date());
-            console.log(isRecording);
-            if (isRecording) takePicture();
+            takePicture();
         }, 10000);
         return () => clearInterval(interval);
     }, [isRecording]);
@@ -106,6 +104,7 @@ export default function App() {
                 type={Camera.Constants.Type.back}
                 onCameraReady={() => setCameraState(true)}
                 ratio="16:9"
+                useCamera2Api={true}
             >
                 <View style={styles.overlay}>
                     <Text style={styles.title}>Failemetry 2.0 :P</Text>
