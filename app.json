@@ -4,7 +4,7 @@
         "slug": "SolarCarFailemetry",
         "version": "1.0.0",
         "orientation": "landscape",
-        "icon": "./assets/solar-1.png",
+        "icon": "./assets/icon.png",
         "splash": {
             "image": "./assets/solar-1.png",
             "resizeMode": "contain",
@@ -21,6 +21,10 @@
             "buildNumber": "1.0.0"
         },
         "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/icon.png",
+                "backgroundColor": "#FFFFFF"
+            },
             "package": "com.sithssolarcar.failemetry2",
             "versionCode": 1
         },
