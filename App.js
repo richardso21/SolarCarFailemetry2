@@ -28,6 +28,8 @@ const firebaseConfig = {
 };
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const root = firebase.storage().ref();
+// tickling realtime database gives realtime functionality on storage
+const tickle = firebase.database().ref();
 
 // ignore expo warning about firebase timings
 LogBox.ignoreLogs([`Setting a timer for a long period`]);
@@ -52,7 +54,9 @@ export default function App() {
     // function to take picture
     const takePicture = async () => {
         if (cameraRef && cameraReady && isRecording) {
-            const data = await cameraRef.current.takePictureAsync();
+            const data = await cameraRef.current.takePictureAsync({
+                quality: 0.5,
+            });
             ToastAndroid.show("Picture Taken!", ToastAndroid.SHORT);
             uploadPicture(data.uri);
         }
@@ -77,9 +81,10 @@ export default function App() {
             xhr.send(null);
         });
 
-        const now = new Date();
+        const now = new Date().getTime();
         const imgRef = root.child(`${now}.jpg`);
-        await imgRef.put(blob);
+        const snapshot = await imgRef.put(blob);
+        await tickle.set({tickle: `${now}`, currentImgUrl: await snapshot.ref.getDownloadURL()})
 
         blob.close();
         ToastAndroid.show("Sent Successfully!", ToastAndroid.SHORT);
